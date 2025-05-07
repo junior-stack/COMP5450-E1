@@ -1,16 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:exercise1/data/Item.dart';
 
-class ItemPage extends StatelessWidget {
+class ItemPage extends StatefulWidget {
+
+  @override
+  _ItemPageState createState() => _ItemPageState();
+
+
+}
+
+class _ItemPageState extends State<ItemPage> {
 
   @override
   Widget build(BuildContext context){
+    final Map data = ModalRoute.of(context)!.settings.arguments as Map;
+    final String imageUrl = data["imageUrl"];
+    final String title = data["title"];
+    final String description = data["description"];
+
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Item"),
-        centerTitle: true,
-      ),
-      body: Text("Item page")
+        appBar: AppBar(
+          title: Text("Item"),
+          centerTitle: true,
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(imageUrl, fit: BoxFit.cover),
+            )),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(title, textAlign: TextAlign.left,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                    ),),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(description),
+                )
+              ],)
+          ],
+        )
     );
   }
 }
