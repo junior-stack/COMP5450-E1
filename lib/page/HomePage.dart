@@ -38,12 +38,12 @@ class _HomePageState extends State<HomePage> {
 
 
   void _toShoppingCart() {
-    Navigator.pushNamed(context, "/shoppingCart");
+    Navigator.pushNamed(context, "/shoppingCart", arguments: _items);
   }
 
   void updateCartStatus(int index){
     List<Item> newItems = []..addAll(_items);
-    newItems[index].added = true;
+    newItems[index].added = !newItems[index].added;
     setState((){
       _items = newItems;
     });
@@ -98,41 +98,59 @@ class GalleryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        onTap: (){
-          Navigator.pushNamed(context, "/item", arguments: {
-            "imageUrl": item.imageURI,
-            "title": item.title,
-            "description": item.description
-          });
-        },
-        child: Column(
-          children: [
-            Expanded(child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(item.imageURI, fit: BoxFit.cover)
-            )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Text(item.title, textAlign: TextAlign.left,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20
-                    ),),
-                ),
-                IconButton(onPressed: item.added ? null : () => onUpdate(index), icon: Icon(Icons.add))
-              ],
-            )
+    return Stack(
+      children: [
+        Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: InkWell(
+          onTap: (){
+            Navigator.pushNamed(context, "/item", arguments: {
+              "imageUrl": item.imageURI,
+              "title": item.title,
+              "description": item.description
+            });
+          },
+          child: Column(
+            children: [
+              Expanded(child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(item.imageURI, fit: BoxFit.cover)
+              )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Text(item.title, textAlign: TextAlign.left,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20
+                      ),),
+                  ),
+                  IconButton(onPressed: item.added ? null : () => onUpdate(index), icon: Icon(Icons.add))
+                ],
+              )
 
-          ],
-        ),
-      )
+            ],
+          ),
+        )
+    ),
+        if(item.added)
+          Positioned(
+            right: 8,
+            top: 8,
+            child: GestureDetector(
+              onTap: () => onUpdate(index),
+              child: Icon(
+              Icons.close,
+              size: 20,
+              color: Colors.grey[700],
+              ),
+            ),
+          ),
+
+      ],
     );
   }
 }
