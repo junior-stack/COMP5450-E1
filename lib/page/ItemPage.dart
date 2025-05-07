@@ -13,6 +13,13 @@ class _ItemPageState extends State<ItemPage> {
 
   @override
   Widget build(BuildContext context){
+    if(ModalRoute.of(context)!.settings.arguments == null){
+      return Scaffold(
+        appBar: AppBar(title: Text("Item"), centerTitle: true),
+        body: Center(child: Text("Invalid access. No data provided"))
+      );
+    }
+
     final Map data = ModalRoute.of(context)!.settings.arguments as Map;
     final String imageUrl = data["imageUrl"];
     final String title = data["title"];

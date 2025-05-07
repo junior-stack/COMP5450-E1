@@ -11,6 +11,13 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
 
   @override
   Widget build(BuildContext context){
+    if(ModalRoute.of(context)!.settings.arguments == null){
+      return Scaffold(
+          appBar: AppBar(title: Text("Shopping Cart"), centerTitle: true),
+          body: Center(child: Text("Invalid access. No data provided"))
+      );
+    }
+
     final List<Item> rawdata = ModalRoute.of(context)!.settings.arguments as List<Item>;
     final List<Item> data = rawdata.where((element) => element.added).toList();
     return Scaffold(
