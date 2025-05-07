@@ -24,18 +24,29 @@ class _HomePageState extends State<HomePage> {
   List<Item> _items = [
     Item("shoe",
         "https://static.nike.com/a/images/f_auto,cs_srgb/w_960,c_limit/63c81961-0e99-47d0-a905-7893ca9df07b/men-s-shoes-clothing-accessories.png",
+        "shoe",
         false),
     Item("Nike",
         "https://static.nike.com/a/images/f_auto/dpr_1.0,cs_srgb/w_1807,c_limit/d4e3b9c4-ed5c-4ab9-b66b-74dbd6ca199a/men-s-shoes-clothing-accessories.png",
+        "Nike",
         false),
     Item("sneakers",
         "https://static.nike.com/a/images/f_auto/dpr_1.0,cs_srgb/w_1807,c_limit/8599251f-ed87-4442-898c-6ce26b28dfbf/men-s-shoes-clothing-accessories.png",
+        "sneakers",
         false)
   ];
 
 
   void _toShoppingCart() {
     Navigator.pushNamed(context, "/shoppingCart");
+  }
+
+  void updateCartStatus(int index){
+    List<Item> newItems = []..addAll(_items);
+    newItems[index].added = true;
+    setState((){
+      _items = newItems;
+    });
   }
 
   @override
@@ -58,7 +69,14 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(20),
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
-        children: _items.map((item) => GalleryCard(imageUrl: item.imageURI, title: item.title)).toList(),
+        children: _items.asMap().map((i, item) =>
+            MapEntry(i,
+                GalleryCard(
+                  item: item,
+                  index: i,
+                  onUpdate: updateCartStatus,
+                )
+            )).values.toList(),
 
       ),
       floatingActionButton: FloatingActionButton(
@@ -72,10 +90,11 @@ class _HomePageState extends State<HomePage> {
 }
 
 class GalleryCard extends StatelessWidget {
-  final String imageUrl;
-  final String title;
+  final Item item;
+  final int index;
+  final Function(int) onUpdate;
 
-  const GalleryCard({required this.imageUrl, required this.title});
+  const GalleryCard({required this.item, required this.index, required this.onUpdate});
 
   @override
   Widget build(BuildContext context){
@@ -84,24 +103,30 @@ class GalleryCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: (){
-          Navigator.pushNamed(context, "/item");
+          Navigator.pushNamed(context, "/item", arguments: {
+            "imageUrl": item.imageURI,
+            "title": item.title,
+            "description": item.description
+          });
         },
         child: Column(
           children: [
             Expanded(child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.network(imageUrl, fit: BoxFit.cover)
+                child: Image.network(item.imageURI, fit: BoxFit.cover)
             )),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Text(title, textAlign: TextAlign.left,
+                  child: Text(item.title, textAlign: TextAlign.left,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20
                     ),),
-                )
+                ),
+                IconButton(onPressed: item.added ? null : () => onUpdate(index), icon: Icon(Icons.add))
               ],
             )
 
