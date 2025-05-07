@@ -20,6 +20,7 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
 
     final List<Item> rawdata = ModalRoute.of(context)!.settings.arguments as List<Item>;
     final List<Item> data = rawdata.where((element) => element.added).toList();
+    final total = data.length == 0 ? 0 : data.map((e) => e.price).reduce((value, element) => value + element);
     return Scaffold(
       appBar: AppBar(
         title: Text("Shopping Cart"),
@@ -49,10 +50,29 @@ class _ShoppingCartPageState extends State<ShoppingCartPage> {
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
+                Text("\$${d.price}", style: TextStyle(fontSize: 16))
               ],
             ),
           );
         },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Theme.of(context).appBarTheme.backgroundColor ?? Theme.of(context).primaryColor,
+        elevation: 4,
+        child: Container(
+          height: 56,
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Total",
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              Text("\$$total", style: TextStyle(fontSize: 20, color: Colors.white))
+            ],
+          ),
+        )
       ),
     );
   }

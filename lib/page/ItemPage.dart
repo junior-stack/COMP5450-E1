@@ -24,6 +24,7 @@ class _ItemPageState extends State<ItemPage> {
     final String imageUrl = data["imageUrl"];
     final String title = data["title"];
     final String description = data["description"];
+    final double price = data["price"];
 
 
     return Scaffold(
@@ -39,25 +40,28 @@ class _ItemPageState extends State<ItemPage> {
               borderRadius: BorderRadius.circular(12),
               child: Image.network(imageUrl, fit: BoxFit.cover),
             )),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Text(title, textAlign: TextAlign.left,
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(title, textAlign: TextAlign.left,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20
                     ),),
-                )
-              ],
+                  Text("\$$price", textAlign: TextAlign.right,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                  ),)
+                ],
+              )
             ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Text(description),
-                )
-              ],)
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Text(description),
+            )
           ],
         )
     );

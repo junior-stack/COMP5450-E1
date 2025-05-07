@@ -120,7 +120,8 @@ class GalleryCard extends StatelessWidget {
             Navigator.pushNamed(context, "/item", arguments: {
               "imageUrl": item.imageURI,
               "title": item.title,
-              "description": item.description
+              "description": item.description,
+              "price": item.price
             });
           },
           child: Column(
@@ -140,7 +141,18 @@ class GalleryCard extends StatelessWidget {
                           fontSize: 20
                       ),),
                   ),
-                  IconButton(onPressed: item.added ? null : () => onUpdate(index), icon: Icon(Icons.add))
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Text("\$${item.price}",
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20
+                        ))
+                      ,),
+                  IconButton(onPressed: item.added ? null : () => onUpdate(index),
+                      icon: Icon(Icons.add),
+                      color: Colors.black,)
                 ],
               )
 
